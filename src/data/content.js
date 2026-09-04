@@ -336,6 +336,14 @@ export const MQL5 = {
 // Primary documents shipped alongside the site, in public/assets/reports/.
 // Figures are read off the report's own cover page, not restated from elsewhere.
 export const DOCS = {
+  // The CV published here is the web edition: identical to the one sent
+  // directly, minus the phone number, which is deliberately not on this site.
+  cv: {
+    href: 'assets/reports/Anand_P_Quantitative_Researcher_CV.pdf',
+    title: 'Curriculum Vitae — Anand P',
+    meta: 'One page · quantitative research & algorithmic trading · PDF',
+    note: 'The same research summarised for a hiring desk: seven studies, the production systems, and the certificates below with their verification IDs.',
+  },
   momentum15yr: {
     href: 'assets/reports/Backtest_15Year_Report.pdf',
     title: 'Nifty 500 Momentum Strategy — 15-Year Backtest Report',

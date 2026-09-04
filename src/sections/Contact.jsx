@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PROFILE } from '../data/content';
+import { PROFILE, DOCS } from '../data/content';
 import { Section, Reveal } from '../components/ui';
 
 export default function Contact() {
@@ -40,6 +40,18 @@ export default function Contact() {
             <a href={PROFILE.linkedin} target="_blank" rel="noreferrer">
               {PROFILE.linkedinLabel}
             </a>
+          </div>
+        </div>
+
+        <div className="contact-cell">
+          <div className="contact-k">Curriculum vitae</div>
+          <div className="contact-v">
+            <a href={DOCS.cv.href} target="_blank" rel="noreferrer">
+              Download CV (PDF)
+            </a>
+          </div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-3)', marginTop: '0.5rem', lineHeight: 1.55 }}>
+            {DOCS.cv.meta}
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PROFILE } from '../data/content';
+import { PROFILE, DOCS } from '../data/content';
 import { RESEARCH } from '../data/research';
 import { Reveal, num } from '../components/ui';
 
@@ -41,6 +41,9 @@ export default function Masthead() {
             </a>
             <a href="#archive" className="btn">
               Evidence archive
+            </a>
+            <a href={DOCS.cv.href} className="btn" target="_blank" rel="noreferrer">
+              Download CV
             </a>
             <a href={`mailto:${PROFILE.email}`} className="btn">
               Get in touch
