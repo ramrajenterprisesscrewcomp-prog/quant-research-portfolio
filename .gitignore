@@ -1,0 +1,22 @@
+# Research sources — READ AT BUILD TIME ONLY, NEVER DEPLOYED.
+# Contains API keys, .env files and a Google service-account JSON.
+# See README.md: "Keep it out of any deploy."
+port source/
+
+# Dependencies and build output
+node_modules/
+dist/
+
+# Local backups
+.rebuild_backup/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
