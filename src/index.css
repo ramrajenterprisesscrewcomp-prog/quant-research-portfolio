@@ -26,16 +26,29 @@
   --mono:  'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --rail: 232px;
-  --pad: clamp(1.25rem, 4vw, 4rem);
+  /* Side padding folds in the notch/rounded-corner inset so landscape phones
+     never tuck content under the cutout. env() is 0 everywhere else. */
+  --pad-base: clamp(1.25rem, 4vw, 4rem);
+  --pad: calc(var(--pad-base) + env(safe-area-inset-left, 0px));
   --maxw: 1180px;
+  /* Height of the sticky mobile bar; anchors must clear it when scrolled to. */
+  --bar-h: 3.35rem;
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+  /* iOS inflates text in landscape unless this is pinned. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   margin: 0;
+  /* A single overflowing table must never make the whole page pan sideways. */
+  overflow-x: hidden;
   background: var(--ink);
   color: var(--text);
   font-family: var(--sans);
@@ -120,6 +133,8 @@ a { color: inherit; }
 
 .tablewrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   border: 1px solid var(--line);
   border-radius: 3px;
   background: var(--ink-2);
@@ -196,7 +211,7 @@ td .sub {
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
@@ -228,8 +243,15 @@ td .sub {
 /* Cards -------------------------------------------------------------------- */
 
 .grid { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
-.grid.two   { grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); }
-.grid.three { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+/* Grid and flex children default to min-width:auto, so a cell holding a wide
+   table refuses to shrink and pushes past the viewport — the inner
+   .tablewrap can then never scroll. min-width:0 lets the cell narrow. */
+.grid > *,
+.stats > *,
+.contact-grid > *,
+.prosgrid > * { min-width: 0; }
+.grid.two   { grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); }
 
 .card { background: var(--ink-2); padding: 1.5rem 1.4rem; }
 .card h4 {
@@ -283,7 +305,9 @@ td .sub {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   padding: 2.75rem 1.5rem 2rem;
+  padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -322,13 +346,11 @@ td .sub {
   transition: color 0.15s, border-color 0.15s, background 0.15s;
 }
 .rail-link span.n { font-family: var(--mono); font-size: 0.63rem; color: var(--text-3); }
-.rail-link:hover { color: var(--text); background: rgba(236, 234, 229, 0.035); }
 .rail-link.on { color: var(--text); border-left-color: var(--brass); }
 .rail-link.on span.n { color: var(--brass); }
 
 .rail-foot { margin-top: auto; font-family: var(--mono); font-size: 0.64rem; color: var(--text-3); line-height: 1.8; }
 .rail-foot a { color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line-2); }
-.rail-foot a:hover { color: var(--brass); border-color: var(--brass); }
 
 /* Masthead ----------------------------------------------------------------- */
 
@@ -381,15 +403,13 @@ td .sub {
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
-.btn:hover { border-color: var(--brass); color: var(--brass); }
 .btn.solid { background: var(--brass); border-color: var(--brass); color: var(--ink); font-weight: 600; }
-.btn.solid:hover { background: #e6b558; border-color: #e6b558; color: var(--ink); }
 
 /* Ledger (masthead figures) ------------------------------------------------ */
 
 .ledger {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(128px, 100%), 1fr));
   gap: 1.6rem 1.2rem;
   padding-top: 2.2rem;
   border-top: 1px solid var(--line);
@@ -438,7 +458,6 @@ td .sub {
   padding: 1.3rem 1.4rem;
   transition: background 0.15s, border-color 0.15s;
 }
-.doc:hover { background: var(--ink-3); border-color: var(--brass); border-left-color: var(--brass); }
 
 .doc-top { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: baseline; justify-content: space-between; }
 .doc-title { font-family: var(--serif); font-size: 1.14rem; font-weight: 500; letter-spacing: -0.01em; }
@@ -491,6 +510,8 @@ td .sub {
 
 .diagramwrap {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
   border: 1px solid var(--line);
   border-radius: 3px;
   background: var(--ink-2);
@@ -502,7 +523,7 @@ td .sub {
 
 .prosgrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
   gap: 1.2rem;
   margin-top: 1.2rem;
   padding-top: 1.1rem;
@@ -536,7 +557,6 @@ td .sub {
   cursor: pointer;
   transition: all 0.15s;
 }
-.toggle:hover { color: var(--text); border-color: var(--line-2); }
 .toggle.on { color: var(--ink); background: var(--brass); border-color: var(--brass); font-weight: 600; }
 
 /* Timeline ----------------------------------------------------------------- */
@@ -574,12 +594,11 @@ td .sub {
 
 /* Contact ------------------------------------------------------------------ */
 
-.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .contact-cell { background: var(--ink-2); padding: 1.5rem 1.4rem; }
 .contact-k { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.6rem; }
 .contact-v { font-size: 0.98rem; word-break: break-word; }
 .contact-v a { text-decoration: none; border-bottom: 1px solid var(--line-2); }
-.contact-v a:hover { color: var(--brass); border-color: var(--brass); }
 
 .copybtn {
   margin-top: 0.85rem;
@@ -595,7 +614,6 @@ td .sub {
   cursor: pointer;
   transition: all 0.15s;
 }
-.copybtn:hover { color: var(--brass); border-color: var(--brass); }
 
 /* Footer ------------------------------------------------------------------- */
 
@@ -633,14 +651,122 @@ td .sub {
     top: 0;
     z-index: 40;
     background: rgba(10, 11, 13, 0.93);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--line);
     padding: 0.85rem var(--pad);
   }
   .mobile-bar h1 { font-family: var(--serif); font-size: 1.02rem; margin: 0; font-weight: 500; }
-  .mobile-bar span { font-family: var(--mono); font-size: 0.62rem; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; }
+  .mb-active {
+    font-family: var(--mono); font-size: 0.62rem; color: var(--text-3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    /* The section label yields before the name or the button do. */
+    flex: 1 1 auto; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
   .main { padding-top: 0; }
   .tl-row { grid-template-columns: 1fr; gap: 0.3rem; }
+}
+
+/* --- Mobile section navigation -------------------------------------------
+   Below 940px the rail is gone, so this is the only way to reach a section
+   without scrolling the whole dossier. Hidden above the breakpoint.
+   -------------------------------------------------------------------------- */
+
+.mobile-nav, .mobile-scrim { display: none; }
+
+@media (max-width: 940px) {
+  .mb-toggle {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    border-radius: 2px;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .mb-toggle.on { color: var(--brass); border-color: var(--brass); }
+
+  .mb-bars { display: grid; gap: 3px; width: 13px; }
+  .mb-bars i {
+    display: block; height: 1.5px; width: 100%;
+    background: currentColor; border-radius: 1px;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+  }
+  .mb-toggle.on .mb-bars i:nth-child(1) { transform: translateY(4.5px) rotate(45deg); }
+  .mb-toggle.on .mb-bars i:nth-child(2) { opacity: 0; }
+  .mb-toggle.on .mb-bars i:nth-child(3) { transform: translateY(-4.5px) rotate(-45deg); }
+
+  .mobile-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 38;
+    background: rgba(6, 7, 9, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .mobile-scrim.on { opacity: 1; pointer-events: auto; }
+
+  .mobile-nav {
+    display: block;
+    position: fixed;
+    top: var(--bar-h);
+    left: 0;
+    right: 0;
+    z-index: 39;
+    max-height: calc(100dvh - var(--bar-h));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--ink-2);
+    border-bottom: 1px solid var(--line-2);
+    padding: 0.6rem var(--pad) calc(1rem + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+  /* [hidden] must win over the display:block above. */
+  .mobile-nav[hidden] { display: none; }
+
+  .mobile-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.72rem 0.3rem;
+    text-decoration: none;
+    color: var(--text-2);
+    font-size: 0.92rem;
+    border-bottom: 1px solid var(--line);
+    border-left: 2px solid transparent;
+  }
+  .mobile-link:last-of-type { border-bottom: 0; }
+  .mobile-link .n { font-family: var(--mono); font-size: 0.66rem; color: var(--text-3); }
+  .mobile-link.on { color: var(--text); border-left-color: var(--brass); padding-left: 0.5rem; }
+  .mobile-link.on .n { color: var(--brass); }
+
+  .mobile-foot {
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    line-height: 1.9;
+    color: var(--text-3);
+    overflow-wrap: anywhere;
+  }
+  .mobile-foot a { color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+}
+
+@media (max-width: 940px) and (prefers-reduced-motion: reduce) {
+  .mobile-scrim, .mb-bars i { transition: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -721,7 +847,6 @@ td .sub {
   background: var(--ink-2);
   box-shadow: inset 0 -1px 0 var(--line-2);
 }
-.tablewrap.ledger tbody tr:hover { background: rgba(217, 164, 65, 0.04); }
 
 /* Masthead seeking line ------------------------------------------------------ */
 
@@ -757,7 +882,6 @@ table.record td:last-child { text-align: left; }
   padding-bottom: 1px;
   transition: border-color 0.15s, color 0.15s;
 }
-.record-link:hover { color: var(--brass); border-color: var(--brass); }
 
 .record-v {
   display: block;
@@ -799,4 +923,169 @@ table.record td:last-child { text-align: left; }
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--text);
+}
+
+/* Hover — gated so a tap on a touch screen does not leave the state stuck. */
+@media (hover: hover) {
+  .rail-link:hover { color: var(--text); background: rgba(236, 234, 229, 0.035); }
+  .rail-foot a:hover { color: var(--brass); border-color: var(--brass); }
+  .btn:hover { border-color: var(--brass); color: var(--brass); }
+  .btn.solid:hover { background: #e6b558; border-color: #e6b558; color: var(--ink); }
+  .doc:hover { background: var(--ink-3); border-color: var(--brass); border-left-color: var(--brass); }
+  .toggle:hover { color: var(--text); border-color: var(--line-2); }
+  .copybtn:hover { color: var(--brass); border-color: var(--brass); }
+  .contact-v a:hover { color: var(--brass); border-color: var(--brass); }
+  .record-link:hover { color: var(--brass); border-color: var(--brass); }
+  .tablewrap.ledger tbody tr:hover { background: rgba(217, 164, 65, 0.04); }
+}
+
+/* ============================================================================
+   Responsive layer
+   Breakpoints are named for what breaks, not for devices:
+     1600  wide desktop — let the measure grow a little
+     1100  rail gets tight against the content
+      940  rail is dropped for the mobile bar (see .mobile-bar above)
+      700  two-column rows stop working
+      560  small phones — everything goes single column
+      400  smallest phones still in use
+   ========================================================================== */
+
+/* Wide desktop — the reading measure may grow, but not without limit; the
+   dossier is long-form prose and a 1180px measure is already generous. */
+@media (min-width: 1600px) {
+  :root { --rail: 260px; --maxw: 1280px; }
+  .shell { max-width: 1620px; }
+}
+
+/* Rail crowds the tables before it is worth hiding it. Narrow it first. */
+@media (max-width: 1100px) {
+  :root { --rail: 196px; }
+  .rail { padding: 2.25rem 1.1rem 1.75rem; }
+  .rail-link { font-size: 0.79rem; gap: 0.5rem; }
+}
+
+/* --- Below the rail breakpoint -------------------------------------------- */
+@media (max-width: 940px) {
+  /* Anchor jumps must land below the sticky bar, not behind it. */
+  html { scroll-padding-top: calc(var(--bar-h) + 1rem); }
+  .main { padding-bottom: 4rem; }
+  .section { padding: clamp(2.75rem, 6vw, 4rem) 0; }
+  .sec-head { margin-bottom: 2rem; }
+  /* A long ledger capped in px can exceed a short viewport. Cap by viewport. */
+  .tablewrap.ledger { max-height: min(560px, 68dvh); }
+}
+
+@media (max-width: 700px) {
+  .masthead { padding: 2.75rem 0 2.5rem; }
+  .mast-title { max-width: 100%; }
+  .mast-body { font-size: 1rem; }
+  .btnrow { margin-bottom: 2.4rem; }
+  .btn { flex: 1 1 auto; justify-content: center; }
+  .ledger { gap: 1.3rem 1rem; padding-top: 1.8rem; }
+  .doc { padding: 1.15rem 1.1rem; }
+  .doc-figs { gap: 1rem 1.4rem; }
+  .card { padding: 1.25rem 1.15rem; }
+  .contact-cell { padding: 1.25rem 1.15rem; }
+  .callout { padding: 1rem 1.1rem; }
+  .finding { grid-template-columns: 1.9rem 1fr; }
+  .foot { gap: 0.6rem 1.2rem; }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 14.5px; }
+  /* Two cramped columns read worse than one honest one. */
+  .stats { grid-template-columns: 1fr; }
+  .stat { padding: 1rem 1.05rem 0.95rem; }
+  .grid.two,
+  .grid.three,
+  .contact-grid { grid-template-columns: 1fr; }
+  .prosgrid { grid-template-columns: 1fr; gap: 1rem; }
+  .sec-lede { font-size: 0.97rem; }
+  .doc-top { gap: 0.35rem; }
+  .doc-get { font-size: 0.62rem; }
+  .doc-figs { gap: 0.9rem 1.2rem; }
+  .doc-fig-v { font-size: 0.95rem; }
+  .toggles { gap: 0.3rem; }
+}
+
+@media (max-width: 400px) {
+  :root { --pad-base: 1rem; }
+  .ledger { grid-template-columns: 1fr 1fr; }
+  .mast-title { font-size: 2.05rem; }
+  .btn { width: 100%; }
+}
+
+/* Short landscape (phone turned sideways) — vertical space is the scarce axis. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .masthead { padding: 2rem 0 1.75rem; }
+  .section { padding: 2.25rem 0; }
+  .tablewrap.ledger { max-height: 78dvh; }
+  .rail { padding-top: 1.25rem; }
+}
+
+/* --- Touch --------------------------------------------------------------- */
+/* Coarse pointers need a target near 44px; the desktop sizes are too small. */
+@media (pointer: coarse) {
+  /* Set the height directly — deriving 44px from padding plus a variable
+     line-height lands short, which is how these ended up at 31-37px. */
+  .toggle,
+  .copybtn,
+  .btn,
+  .mb-toggle {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toggle { padding: 0.5rem 0.95rem; font-size: 0.72rem; }
+  .copybtn { padding: 0.5rem 0.9rem; font-size: 0.68rem; }
+  .rail-link { min-height: 44px; padding: 0.6rem 0.55rem; align-items: center; }
+  .mobile-link { min-height: 46px; align-items: center; }
+  .contact-v a,
+  .rail-foot a,
+  .record-link { padding-bottom: 0.2rem; }
+}
+
+/* --- Focus --------------------------------------------------------------- */
+/* Keyboard users had no visible focus anywhere on the page. */
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.tablewrap:focus-visible,
+.diagramwrap:focus-visible { outline-offset: -2px; }
+
+/* --- Print ---------------------------------------------------------------- */
+/* The site is a research dossier; people print these. Give them ink on paper
+   rather than a dark ground, and drop the furniture that means nothing here. */
+@media print {
+  :root {
+    --ink: #fff; --ink-2: #fff; --ink-3: #f4f4f2; --surface: #fff;
+    --text: #14161a; --text-2: #3a3d42; --text-3: #6b6e73;
+    --line: rgba(0, 0, 0, 0.16); --line-2: rgba(0, 0, 0, 0.28);
+    --brass: #8a6413; --brass-dim: rgba(138, 100, 19, 0.08);
+    --pos: #1d6b46; --neg: #9c3226;
+  }
+  body { background: #fff; color: #14161a; font-size: 10.5pt; }
+  .rail, .mobile-bar, .mobile-nav, .mobile-scrim, .toggles, .copybtn { display: none !important; }
+  .shell { display: block; max-width: none; }
+  .main { padding: 0; }
+  .wrap { max-width: none; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .section { padding: 1.4rem 0; break-inside: auto; }
+  .sec-head, .stat, .card, .doc, .callout, .tl-row, .stackrow { break-inside: avoid; }
+  h1, h2, h3, h4, .sec-title { break-after: avoid; }
+  .tablewrap { overflow: visible; max-height: none !important; }
+  .tablewrap.ledger { overflow: visible; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  .diagramwrap { overflow: visible; }
+  .diagramwrap svg { min-width: 0; width: 100%; }
+  /* A PDF of the page should still say where each link pointed. */
+  .doc[href]::after {
+    content: ' (' attr(href) ')';
+    font-family: var(--mono); font-size: 8pt; color: var(--text-3);
+    overflow-wrap: anywhere;
+  }
 }

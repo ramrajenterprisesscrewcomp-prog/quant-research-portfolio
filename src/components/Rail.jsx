@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PROFILE } from '../data/content';
 
 export const SECTIONS = [
@@ -50,6 +50,32 @@ function useActiveSection() {
 
 export default function Rail() {
   const active = useActiveSection();
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef(null);
+
+  /* Close on Escape, and stop the page scrolling behind the open panel. */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  /* The rail breakpoint is 940px. If the viewport grows past it while the
+     panel is open, the panel is gone but the scroll lock would remain. */
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 941px)');
+    const onChange = (e) => e.matches && setOpen(false);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   return (
     <>
@@ -85,8 +111,56 @@ export default function Rail() {
 
       <div className="mobile-bar">
         <h1>{PROFILE.name}</h1>
-        <span>{SECTIONS.find((s) => s.id === active)?.label}</span>
+        <span className="mb-active">{SECTIONS.find((s) => s.id === active)?.label}</span>
+        <button
+          type="button"
+          className={`mb-toggle${open ? ' on' : ''}`}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={open ? 'Close section menu' : 'Open section menu'}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="mb-bars" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+          {open ? 'Close' : 'Sections'}
+        </button>
       </div>
+
+      <div
+        className={`mobile-scrim${open ? ' on' : ''}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+
+      <nav
+        id="mobile-nav"
+        ref={panelRef}
+        className={`mobile-nav${open ? ' open' : ''}`}
+        aria-label="Sections"
+        hidden={!open}
+      >
+        {SECTIONS.map((sec) => (
+          <a
+            key={sec.id}
+            href={`#${sec.id}`}
+            className={`mobile-link${active === sec.id ? ' on' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            <span className="n">{sec.n}</span>
+            <span>{sec.label}</span>
+          </a>
+        ))}
+        <div className="mobile-foot">
+          <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
+          <br />
+          <a href={PROFILE.linkedin} target="_blank" rel="noreferrer">
+            LinkedIn
+          </a>
+        </div>
+      </nav>
     </>
   );
 }
