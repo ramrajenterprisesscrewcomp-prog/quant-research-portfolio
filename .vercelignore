@@ -1,0 +1,28 @@
+# Research sources — NEVER upload. Contains API keys, .env files and a
+# Google service-account JSON. Read at build time only, locally.
+port source/
+
+# Dependencies and build output (Vercel builds these itself)
+node_modules/
+dist/
+
+# Local backups
+.rebuild_backup/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Legacy pre-Vite static site — not referenced by index.html.
+# Leading slash anchors these to the repo root so that public/assets/
+# (the served PDFs and charts) is NOT caught by the same pattern.
+/css/
+/js/
+/assets/
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
