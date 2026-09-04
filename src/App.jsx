@@ -12,6 +12,7 @@ import System from './sections/System';
 import Execution from './sections/Execution';
 import { Toolkit, Builds } from './sections/Toolkit';
 import Archive from './sections/Archive';
+import Certificates from './sections/Certificates';
 import Contact from './sections/Contact';
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
         <Toolkit />
         <Builds />
         <Archive />
+        <Certificates />
         <Contact />
       </div>
     </div>

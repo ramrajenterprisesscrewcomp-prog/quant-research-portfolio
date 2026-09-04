@@ -522,6 +522,89 @@ export const GOLD_DOCS = [
   },
 ];
 
+// Certificates, read off the certificate images themselves rather than from the
+// labels the old portfolio used ("Complete Course", "Complete UDMY" told you
+// nothing). Each entry carries the issuer, the date and the verification ID
+// printed on the document, so a reader can check it rather than trust it.
+// Source: the nine certificate scans in public/assets/certificates/.
+export const CERTIFICATES = [
+  {
+    file: 'guvi-machine-learning-101.png',
+    title: 'Machine Learning 101',
+    issuer: 'GUVI Geek Networks',
+    date: '2 August 2023',
+    id: '41u989P6p840s7qE3Q',
+    verify: 'https://www.guvi.in/certificate?id=41u989P6p840s7qE3Q',
+  },
+  {
+    file: 'guvi-javascript.png',
+    title: 'JavaScript',
+    issuer: 'GUVI Geek Networks',
+    date: '4 August 2023',
+    id: '16W1fj11S69J67A2w3',
+    verify: 'https://www.guvi.in/certificate?id=16W1fj11S69J67A2w3',
+  },
+  {
+    file: 'guvi-mysql.png',
+    title: 'MySQL',
+    issuer: 'GUVI Geek Networks',
+    date: '8 August 2023',
+    id: '66I1R48e95X1690747',
+    verify: 'https://www.guvi.in/certificate?id=66I1R48e95X1690747',
+  },
+  {
+    file: 'guvi-mongodb.png',
+    title: 'MongoDB',
+    issuer: 'GUVI Geek Networks',
+    date: '9 August 2023',
+    id: '106d507P1A9w1SJ2Q6',
+    verify: 'https://www.guvi.in/certificate?id=106d507P1A9w1SJ2Q6',
+  },
+  {
+    file: 'guvi-aws.png',
+    title: 'AWS',
+    issuer: 'GUVI Geek Networks',
+    date: '10 August 2023',
+    id: '4A869RIW11v07C465r',
+    verify: 'https://www.guvi.in/certificate?id=4A869RIW11v07C465r',
+  },
+  {
+    file: 'guvi-html-css.png',
+    title: 'Modern HTML & CSS',
+    issuer: 'GUVI Geek Networks',
+    date: '18 August 2023',
+    id: '6371RWC65k949224Hm',
+    verify: 'https://www.guvi.in/certificate?id=6371RWC65k949224Hm',
+  },
+  {
+    file: 'udemy-web-development-bootcamp.jpg',
+    title: 'The Complete 2023 Web Development Bootcamp',
+    issuer: 'Udemy \u00b7 Dr. Angela Yu',
+    date: '14 June 2023',
+    id: 'UC-9119f073-4aa0-4a0e-9472-be086a851cbe',
+    verify: 'https://ude.my/UC-9119f073-4aa0-4a0e-9472-be086a851cbe',
+    note: '66 hours',
+  },
+  {
+    file: 'teachnook-webdev-internship.jpg',
+    title: 'Web Development Internship',
+    issuer: 'Immensphere, in association with Teachnook',
+    date: '1 Jan \u2013 28 Feb 2023',
+    id: 'TNINTC22-1183',
+  },
+  {
+    file: 'teachnook-webdev-course.jpg',
+    title: 'Web Development Course',
+    issuer: 'Teachnook, with Wissenaire \u00b7 IIT Bhubaneshwar',
+    date: '1 Jan \u2013 28 Feb 2023',
+    id: 'TNINTC22-2366',
+  },
+];
+
+// Said plainly so the section cannot be mistaken for more than it is.
+export const CERTIFICATES_NOTE =
+  'Nine certificates from 2023, before the quantitative work on this site. Six are short GUVI course certificates, two are the Teachnook web-development internship and its course, and one is a 66-hour Udemy bootcamp. They are online course completions, not professional qualifications, and they are here with their issue dates and verification IDs so that is checkable rather than implied. The Machine Learning and MySQL certificates are the two that connect to the research above; the rest are web development, which is what built this page.';
+
 export const ARCHIVE_NOTE =
   'These are the original research documents, unedited. Everything quoted elsewhere on this page was computed from the same underlying data — the reports are here so the figures can be checked rather than taken on trust.';
 
@@ -651,5 +734,24 @@ export const BUILDS = [
     name: 'RRE Company Dashboard',
     kind: 'Static · charts',
     body: 'Operations dashboard covering sales and quotation tracking, service and maintenance, spares inventory, and customer intelligence.',
+  },
+
+  {
+    name: 'TKS Mart',
+    kind: 'HTML · CSS · e-commerce',
+    body: 'Storefront build from the 2023 web-development work — product grid, cart and checkout flow, hand-written rather than themed.',
+    href: 'https://tks-mart.netlify.app/',
+  },
+  {
+    name: 'Movie Linked',
+    kind: 'HTML · CSS · JavaScript',
+    body: 'Film browsing and download index, built while working through the Teachnook and Udemy web-development courses.',
+    href: 'https://movie-linked.netlify.app/index.html',
+  },
+  {
+    name: 'Soccial',
+    kind: 'React',
+    body: 'Social feed interface in React — the project that moved the 2023 work from static pages to component state.',
+    href: 'https://anand3643.github.io/soccial/',
   },
 ];

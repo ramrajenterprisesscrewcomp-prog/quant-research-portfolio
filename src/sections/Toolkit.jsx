@@ -65,6 +65,12 @@ export function Builds() {
             <div className="card-kicker">{b.kind}</div>
             <h4>{b.name}</h4>
             <p>{b.body}</p>
+            {/* Only the older web builds are still live somewhere to link to. */}
+            {b.href && (
+              <a className="card-link" href={b.href} target="_blank" rel="noreferrer">
+                View live →
+              </a>
+            )}
           </div>
         ))}
       </Reveal>

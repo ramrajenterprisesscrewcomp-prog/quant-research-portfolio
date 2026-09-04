@@ -19,7 +19,7 @@ export default function Contact() {
   return (
     <Section
       id="contact"
-      num="13 — Contact"
+      num="14 — Contact"
       title="Open to quantitative research and trading systems work"
       lede="If you want to interrogate any number on this page, I still have the notebooks, the CSVs and the failed runs. That conversation is the one I want to have."
     >

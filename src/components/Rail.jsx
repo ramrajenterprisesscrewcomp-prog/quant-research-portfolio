@@ -15,7 +15,8 @@ export const SECTIONS = [
   { id: 'toolkit', n: '10', label: 'Indicator Toolkit' },
   { id: 'builds', n: '11', label: 'Other Builds' },
   { id: 'archive', n: '12', label: 'Evidence Archive' },
-  { id: 'contact', n: '13', label: 'Contact' },
+  { id: 'certificates', n: '13', label: 'Certificates' },
+  { id: 'contact', n: '14', label: 'Contact' },
 ];
 
 /* Tracks which section is currently in view for the rail highlight. */
