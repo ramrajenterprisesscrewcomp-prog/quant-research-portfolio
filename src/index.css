@@ -1192,3 +1192,29 @@ table.record td:last-child { text-align: left; }
   .cert { break-inside: avoid; page-break-inside: avoid; }
   .cert-shot { display: none; }
 }
+
+/* ---------------------------------------------------------------- Site mark */
+
+.logo { display: block; flex: none; color: var(--text-2); }
+
+.rail-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: inherit;
+}
+.rail-brand .rail-name { margin: 0; }
+
+/* The mark carries the brass; the baseline and muted candle take their tint
+   from `color`, so lifting it on hover brightens the whole glyph together. */
+@media (hover: hover) {
+  .rail-brand:hover .logo { color: var(--text); }
+}
+
+/* The mobile bar aligns on the text baseline, which sits an SVG too high. */
+.mb-logo { align-self: center; margin-right: -0.3rem; }
+
+@media print {
+  .logo { display: none; }
+}

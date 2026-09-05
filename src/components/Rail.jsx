@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROFILE } from '../data/content';
+import Logo from './Logo';
 
 export const SECTIONS = [
   { id: 'top', n: '00', label: 'Overview' },
@@ -82,7 +83,10 @@ export default function Rail() {
     <>
       <nav className="rail">
         <div>
-          <h1 className="rail-name">{PROFILE.name}</h1>
+          <a className="rail-brand" href="#top" aria-label={`${PROFILE.name} — top of page`}>
+            <Logo size={29} />
+            <h1 className="rail-name">{PROFILE.name}</h1>
+          </a>
           <div className="rail-role">
             {PROFILE.role}
             <br />
@@ -111,6 +115,7 @@ export default function Rail() {
       </nav>
 
       <div className="mobile-bar">
+        <Logo size={23} className="mb-logo" />
         <h1>{PROFILE.name}</h1>
         <span className="mb-active">{SECTIONS.find((s) => s.id === active)?.label}</span>
         <button
